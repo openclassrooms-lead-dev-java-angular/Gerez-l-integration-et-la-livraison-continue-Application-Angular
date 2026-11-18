@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: olympic-games-app
-        # TODO: add the image of the application from the gitlab registry
+        image: ghcr.io/openclassrooms-lead-dev-java-angular/olympic-games-frontend:latest
         ports:
         - containerPort: 80
-      # TODO: define imagePullSecrets to use a docker-registry secret and authorize Kubenetes 
+
