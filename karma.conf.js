@@ -35,7 +35,7 @@ module.exports = function (config) {
     },
     reporters: ['progress', 'junit', 'junit'],
     junitReporter: {
-      outputDir: 'reports/junit',
+      outputDir: 'test-results',
       outputFile: 'TESTS-angular.xml',
       useBrowserName: false,
       suite: 'Angular Tests'
