@@ -86,25 +86,6 @@ jobs:
       # TEST REPORT
       # ==========================================
 
-      - name: Debug Angular test reports
-        if: always()
-        shell: bash
-        run: |
-          echo "Working directory:"
-          pwd
-
-          echo "Generated XML files:"
-          find . -type f -name "*.xml" -print
-
-          echo "Expected Angular report:"
-          ls -lah reports/junit/ || true
-
-          if [ -f reports/junit/TESTS-angular.xml ]; then
-            echo "Angular JUnit report found!"
-          else
-            echo "ERROR: Angular JUnit report missing!"
-          fi
-
       - name: Publish Angular test report
         if: always()
         uses: dorny/test-reporter@v2
