@@ -1,0 +1,94 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - ci/setup-github-actions
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Code recovery
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Project type detection
+      - name: Detect project type
+        id: detect
+        shell: bash
+        run: |
+          if [[ -f "gradlew" ]]; then
+            echo "project=java" >> "$GITHUB_OUTPUT"
+          elif [[ -f "package.json" ]] && grep -q '"@angular/core"' package.json; then
+            echo "project=angular" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unsupported project type"
+            exit 1
+          fi
+
+      # ==========================================
+      # JAVA / GRADLE
+      # ==========================================
+
+      - name: Set up Java
+        if: steps.detect.outputs.project == 'java'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Gradle
+        if: steps.detect.outputs.project == 'java'
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Java tests
+        if: steps.detect.outputs.project == 'java'
+        run: |
+          chmod +x gradlew
+          ./gradlew clean test --no-daemon
+
+      # ==========================================
+      # ANGULAR / NODE.JS
+      # ==========================================
+
+      - name: Set up Node.js
+        if: steps.detect.outputs.project == 'angular'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install Angular dependencies
+        if: steps.detect.outputs.project == 'angular'
+        run: npm ci
+
+      - name: Run Angular tests
+        if: steps.detect.outputs.project == 'angular'
+        run: npm test -- --watch=false
+
+      # ==========================================
+      # TEST REPORT
+      # ==========================================
+
+      - name: Publish test report
+        if: always()
+        uses: dorny/test-reporter@v2
+        with:
+          name: Test results
+          path: |
+            **/build/test-results/test/*.xml
+            **/test-results/**/*.xml
+          reporter: java-junit
+          fail-on-error: false
