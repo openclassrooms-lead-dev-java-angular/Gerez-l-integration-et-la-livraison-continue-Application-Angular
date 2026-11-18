@@ -90,6 +90,6 @@ jobs:
           path: |
             reports/junit/TESTS-angular.xml
             **/build/test-results/test/TEST-*.xml
-            
+
           reporter: java-junit
           fail-on-error: false
