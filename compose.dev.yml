@@ -1,0 +1,13 @@
+
+services:
+
+  olympic-games-tracler-app:
+    container_name: olympic-games-tracker-dev
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    restart: always
+    ports:
+      - "4200:4200"
+
+
