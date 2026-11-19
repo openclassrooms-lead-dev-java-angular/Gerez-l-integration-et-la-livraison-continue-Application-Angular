@@ -1,0 +1,13 @@
+# Development mode
+FROM node:20.19.0
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --cache .npm --prefer-offline
+
+COPY . .
+
+EXPOSE 4200
+
+CMD ["npm", "run", "start"]
