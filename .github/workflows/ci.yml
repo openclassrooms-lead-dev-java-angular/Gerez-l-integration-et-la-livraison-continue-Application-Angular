@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - ci/setup-github-actions
-      - ci/github-action-build
   pull_request:
     branches:
       - main
