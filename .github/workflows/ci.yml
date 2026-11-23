@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - ci/setup-github-actions
-      - ci/github-action-build
   pull_request:
     branches:
       - main
@@ -97,6 +95,10 @@ jobs:
           reporter: java-junit
           fail-on-error: false
 
+  # ==========================================
+  # RELEASE + DOCKER
+  # ==========================================
+
   build:
     name: Build and publish Docker image
     runs-on: ubuntu-latest
@@ -104,6 +106,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # --------------------------------------
+      # SEMANTIC RELEASE
+      # --------------------------------------
+
+      - name: Create GitHub Release
+        id: release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx semantic-release
+
+      # --------------------------------------
+      # DOCKER
+      # --------------------------------------
 
       - name: Set Docker image name
         id: image
@@ -130,6 +147,7 @@ jobs:
           tags: |
             type=sha,format=long
             type=ref,event=branch
+            type=raw,value=${{ steps.release.outputs.version }},enable=${{ steps.release.outputs.version != '' }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
