@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/openclassrooms-lead-dev-java-angular/Gerez-l-integration-et-la-livraison-continue-Application-Angular/compare/v1.0.0...v1.0.1) (2026-11-23)
+
+
+### Bug Fixes
+
+* **setup-semantic-release:** remove current branch in ci and releaserc ([cc8e9c0](https://github.com/openclassrooms-lead-dev-java-angular/Gerez-l-integration-et-la-livraison-continue-Application-Angular/commit/cc8e9c0f60e7557e9b48db0d57a5a37e269fe5ad))
+
 # 1.0.0 (2026-11-23)
 
 
