@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - ci/setup-semantic-release
   pull_request:
     branches:
       - main
